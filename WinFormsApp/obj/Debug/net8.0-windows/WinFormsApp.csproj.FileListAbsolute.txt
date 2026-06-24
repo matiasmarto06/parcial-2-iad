@@ -1,0 +1,17 @@
+C:\Users\matias\My Drive\projects\parcial-2-iad\WinFormsApp\bin\Debug\net8.0-windows\WinFormsApp.exe
+C:\Users\matias\My Drive\projects\parcial-2-iad\WinFormsApp\bin\Debug\net8.0-windows\WinFormsApp.deps.json
+C:\Users\matias\My Drive\projects\parcial-2-iad\WinFormsApp\bin\Debug\net8.0-windows\WinFormsApp.runtimeconfig.json
+C:\Users\matias\My Drive\projects\parcial-2-iad\WinFormsApp\bin\Debug\net8.0-windows\WinFormsApp.dll
+C:\Users\matias\My Drive\projects\parcial-2-iad\WinFormsApp\bin\Debug\net8.0-windows\WinFormsApp.pdb
+C:\Users\matias\My Drive\projects\parcial-2-iad\WinFormsApp\obj\Debug\net8.0-windows\WinFormsApp.csproj.GenerateResource.cache
+C:\Users\matias\My Drive\projects\parcial-2-iad\WinFormsApp\obj\Debug\net8.0-windows\WinFormsApp.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\matias\My Drive\projects\parcial-2-iad\WinFormsApp\obj\Debug\net8.0-windows\WinFormsApp.AssemblyInfoInputs.cache
+C:\Users\matias\My Drive\projects\parcial-2-iad\WinFormsApp\obj\Debug\net8.0-windows\WinFormsApp.AssemblyInfo.cs
+C:\Users\matias\My Drive\projects\parcial-2-iad\WinFormsApp\obj\Debug\net8.0-windows\WinFormsApp.csproj.CoreCompileInputs.cache
+C:\Users\matias\My Drive\projects\parcial-2-iad\WinFormsApp\obj\Debug\net8.0-windows\WinFormsApp.sourcelink.json
+C:\Users\matias\My Drive\projects\parcial-2-iad\WinFormsApp\obj\Debug\net8.0-windows\WinFormsApp.dll
+C:\Users\matias\My Drive\projects\parcial-2-iad\WinFormsApp\obj\Debug\net8.0-windows\refint\WinFormsApp.dll
+C:\Users\matias\My Drive\projects\parcial-2-iad\WinFormsApp\obj\Debug\net8.0-windows\WinFormsApp.pdb
+C:\Users\matias\My Drive\projects\parcial-2-iad\WinFormsApp\obj\Debug\net8.0-windows\WinFormsApp.genruntimeconfig.cache
+C:\Users\matias\My Drive\projects\parcial-2-iad\WinFormsApp\obj\Debug\net8.0-windows\ref\WinFormsApp.dll
+C:\Users\matias\My Drive\projects\parcial-2-iad\WinFormsApp\obj\Debug\net8.0-windows\WinFormsApp.MainView.resources
