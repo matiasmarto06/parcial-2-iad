@@ -13,6 +13,10 @@ namespace WinFormsApp
         private Button btnCalculate;
         private DataGridView outputGrid;
         private Label lblRecommendation;
+        private Label lblCapital;
+        private TextBox txtCapital;
+        private Button btnEditCapital;
+
         private const double Capital = 850000.0;
         private double[] bankAverages = new double[3]; // Provincia, Nacion, Hipotecario
         public MainView()
@@ -23,18 +27,22 @@ namespace WinFormsApp
         private void BuildUI()
         {
             this.Text = "Analizador de Inversiones - Parcial 2";
-            this.Size = new Size(620, 580);
+            this.Size = new Size(620, 600);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.BackColor = SystemColors.Control;
 
-            lblInstruction = new Label { Top = 20, Left = 20, Width = 560, Height = 30, Font = new Font("Microsoft Sans Serif", 9, FontStyle.Regular) };
+            lblInstruction = new Label { Top = 15, Left = 20, Width = 560, Height = 20, Font = new Font("Microsoft Sans Serif", 9, FontStyle.Regular) };
             lblInstruction.Text = "Ingrese los valores históricos de los plazos fijos anuales de los últimos 3 años (en porcentaje):";
+
+            lblCapital = new Label { Top = 45, Left = 20, Width = 120, Height = 25, Text = "Capital a invertir: $", Font = new Font("Microsoft Sans Serif", 9, FontStyle.Bold) };
+            txtCapital = new TextBox { Top = 42, Left = 140, Width = 120, Text = "850000", ReadOnly = true }; 
+            btnEditCapital = new Button { Top = 40, Left = 270, Width = 80, Height = 25, Text = "Editar", Cursor = Cursors.Hand };
 
             inputGrid = new DataGridView
             {
-                Top = 60,
+                Top = 80,
                 Left = 20,
                 Width = 560,
                 Height = 130,
@@ -107,28 +115,64 @@ namespace WinFormsApp
             lblRecommendation = new Label { Top = 400, Left = 20, Width = 560, Height = 100, Font = new Font("Microsoft Sans Serif", 10, FontStyle.Bold), ForeColor = Color.DarkBlue };
             lblRecommendation.Visible = false;
 
+            btnConfirm.Top = 230;
+            btnCalculate.Top = 230;
+            outputGrid.Top = 290;
+            lblRecommendation.Top = 420;
+
             this.Controls.Add(lblInstruction);
             this.Controls.Add(inputGrid);
             this.Controls.Add(btnConfirm);
             this.Controls.Add(btnCalculate);
             this.Controls.Add(outputGrid);
             this.Controls.Add(lblRecommendation);
+            this.Controls.Add(lblCapital);
+            this.Controls.Add(txtCapital);
+            this.Controls.Add(btnEditCapital);
+        }
+        private void InputGrid_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (btnCalculate != null)
+            {
+                btnCalculate.Enabled = false;
+            }
         }
         private void BtnConfirm_Click(object sender, EventArgs e)
         {
-            bool isValid = true;
+            if (!ValidateAndCalculateAverages())
+            {
+                MessageBox.Show("Por favor, ingrese valores numéricos válidos y positivos para todos los años.", "Error de Validación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                btnCalculate.Enabled = false;
+                return;
+            }
+
+            for (int col = 1; col <= 3; col++)
+            {
+                inputGrid.Rows[3].Cells[col].Value = bankAverages[col - 1].ToString("F2");
+            }
+
+            btnCalculate.Enabled = true;
+            MessageBox.Show("Datos confirmados. Promedios calculados con éxito.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+        private bool ValidateAndCalculateAverages()
+        {
+            bool isGridValid = true;
             ResetGridColors();
 
             for (int col = 1; col <= 3; col++)
             {
                 double sum = 0;
+                bool isColumnValid = true;
+
                 for (int row = 0; row < 3; row++)
                 {
                     var cell = inputGrid.Rows[row].Cells[col];
+
                     if (cell.Value == null)
                     {
                         cell.Style.BackColor = Color.LightCoral;
-                        isValid = false;
+                        isGridValid = false;
+                        isColumnValid = false;
                         continue;
                     }
 
@@ -137,7 +181,8 @@ namespace WinFormsApp
                     if (!double.TryParse(rawValue, NumberStyles.Any, CultureInfo.InvariantCulture, out double rate) || rate <= 0 || rate > 1000)
                     {
                         cell.Style.BackColor = Color.LightCoral;
-                        isValid = false;
+                        isGridValid = false;
+                        isColumnValid = false;
                     }
                     else
                     {
@@ -145,22 +190,14 @@ namespace WinFormsApp
                     }
                 }
 
-                if (isValid)
+               
+                if (isColumnValid)
                 {
                     bankAverages[col - 1] = sum / 3.0;
-                    inputGrid.Rows[3].Cells[col].Value = bankAverages[col - 1].ToString("F2");
                 }
             }
 
-            if (!isValid)
-            {
-                MessageBox.Show("Por favor, ingrese valores numéricos válidos y positivos para todos los años.", "Error de Validación", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                btnCalculate.Enabled = false;
-                return;
-            }
-
-            btnCalculate.Enabled = true;
-            MessageBox.Show("Datos confirmados. Promedios calculados con éxito.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return isGridValid;
         }
         private void ResetGridColors()
         {
@@ -170,7 +207,7 @@ namespace WinFormsApp
                 {
                     inputGrid.Rows[row].Cells[col].Style.BackColor = Color.White;
                 }
-            }
+            }   
         }
         private void BtnCalculate_Click(object sender, EventArgs e)
         {
@@ -186,28 +223,25 @@ namespace WinFormsApp
             {
                 double annualRateDecimal = bankAverages[i] / 100.0;
 
-                double returnAnnual = Capital * (1 + annualRateDecimal);
-                double returnQuarterly = Capital * Math.Pow(1 + (annualRateDecimal / 4.0), 4);
-                double returnMonthly = Capital * Math.Pow(1 + (annualRateDecimal / 12.0), 12);
+                double totalAnnual = Capital * (1 + annualRateDecimal);
+                double totalQuarterly = Capital * Math.Pow(1 + (annualRateDecimal / 4.0), 4);
+                double totalMonthly = Capital * Math.Pow(1 + (annualRateDecimal / 12.0), 12);
 
-                outputGrid.Rows[0].Cells[i + 1].Value = returnAnnual.ToString("C2");
-                outputGrid.Rows[1].Cells[i + 1].Value = returnQuarterly.ToString("C2");
-                outputGrid.Rows[2].Cells[i + 1].Value = returnMonthly.ToString("C2");
+                double yieldAnnual = totalAnnual - Capital;
+                double yieldQuarterly = totalQuarterly - Capital;
+                double yieldMonthly = totalMonthly - Capital;
 
-                if (returnMonthly > maxReturn) { maxReturn = returnMonthly; bestBank = bankNames[i]; bestModality = "Mensual"; }
-                if (returnQuarterly > maxReturn) { maxReturn = returnQuarterly; bestBank = bankNames[i]; bestModality = "Trimestral"; }
-                if (returnAnnual > maxReturn) { maxReturn = returnAnnual; bestBank = bankNames[i]; bestModality = "Anual"; }
+                outputGrid.Rows[0].Cells[i + 1].Value = yieldAnnual.ToString("C2");
+                outputGrid.Rows[1].Cells[i + 1].Value = yieldQuarterly.ToString("C2");
+                outputGrid.Rows[2].Cells[i + 1].Value = yieldMonthly.ToString("C2");
+
+                if (yieldMonthly > maxReturn) { maxReturn = yieldMonthly; bestBank = bankNames[i]; bestModality = "Mensual"; }
+                if (yieldQuarterly > maxReturn) { maxReturn = yieldQuarterly; bestBank = bankNames[i]; bestModality = "Trimestral"; }
+                if (yieldAnnual > maxReturn) { maxReturn = yieldAnnual; bestBank = bankNames[i]; bestModality = "Anual"; }
             }
 
-            lblRecommendation.Text = $"CONCLUSIÓN:\n\nLa opción más rentable es invertir en {bestBank} bajo la modalidad {bestModality}.\n\nRendimiento total proyectado: {maxReturn:C2}";
+            lblRecommendation.Text = $"CONCLUSIÓN:\n\nLa opción más rentable es invertir en {bestBank} bajo la modalidad {bestModality}.\nRendimientos: {maxReturn:C2}";
             lblRecommendation.Visible = true;
-        }
-        private void InputGrid_CellValueChanged(object sender, DataGridViewCellEventArgs e)
-        {
-            if (btnCalculate != null)
-            {
-                btnCalculate.Enabled = false;
-            }
         }
     }
 }
